@@ -1,0 +1,19 @@
+
+"migration:generate": "npm run typeorm -- migration:generate -d src/database/data-source.ts", 
+Se usa con:
+npm run migration:generate src/migrations/CreateUserTable Cambiando [CreateUserTable] por el nombre deseado 
+
+//TODO Configurar la siguiente lista de comandos
+"typeorm make:migration:empty": "npx typeorm migration:create src/migrations/$npm_config_name",
+"typeorm make:migration:model": "npx typeorm migration:generate -d src/database/typeorm-config.ts src/migrations/ --pretty",
+"typeorm migrate": "npx typeorm migration:run -d src/database/typeorm-config.ts",
+"typeorm migrate:force": "npx typeorm migration:run -d src/database/typeorm-config.ts --force",
+"typeorm migrate:specific": "npx typeorm migration:run -d src/database/typeorm-config.ts -f",
+"typeorm migrate:rollback": "npx typeorm migration:revert -d src/database/typeorm-config.ts",
+"typeorm migrate:reset": "npx typeorm migration:revert -d src/database/typeorm-config.ts --all",
+"typeorm migrate:refresh": "npm run typeorm migrate:reset && npm run typeorm migrate",
+"typeorm migrate:fresh": "npx typeorm schema:drop -d src/database/typeorm-config.ts && npm run typeorm migrate",
+"typeorm migrate:status": "npx typeorm migration:show -d src/database/typeorm-config.ts",
+"typeorm migrate:prod": "npm run typeorm migrate -- --production"
+
+    
