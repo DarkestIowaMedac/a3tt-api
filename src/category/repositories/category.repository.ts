@@ -12,7 +12,8 @@ constructor(
     private readonly repository: Repository<Category>
   ) {}
 
-async create(categoryData: Partial<Category>): Promise<Category> {
+async create(categoryData: { name: string; user: { id: number }  }): Promise<Category> {
+    console.log(categoryData)
     const category = this.repository.create(categoryData);
     return this.repository.save(category);
   }

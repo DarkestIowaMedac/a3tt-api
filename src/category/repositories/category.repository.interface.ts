@@ -1,5 +1,5 @@
 import { Category } from '../entities/category.entity';
 
 export interface ICategoryRepository {
-create(user: Partial<Category>): Promise<Category>;
+create(categoryData: { name: string; user: { id: number } }): Promise<Category>;
 }
