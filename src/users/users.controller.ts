@@ -44,11 +44,16 @@ export class UsersController {
     @Delete('me') 
     @ApiBearerAuth('JWT-auth')
     @UseGuards(JwtAuthGuard) 
-    delete(
+    async delete(
       @Req() req, 
       @Body() loginUserDto: LoginUserDto,
     ) {
-      return this.usersService.delete(req.user.email,loginUserDto); 
+      await this.usersService.delete(req.user.email,loginUserDto);
+      return { 
+        success: true,
+        message: `User deleted successfully`,
+      };
+
     }
 
 

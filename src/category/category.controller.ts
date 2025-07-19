@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CreateUpdateCategoryDto } from './dto/createUpdate-category.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 
@@ -14,38 +13,49 @@ export class CategoryController {
   @Post()
   create(
         @Req() req, 
-        @Body() createCategoryDto: CreateCategoryDto,
+        @Body() createCategoryDto: CreateUpdateCategoryDto,
       ) {
-        console.log(req.user)
-        console.log(createCategoryDto)
         return this.categoryService.create(req.user.sub, createCategoryDto);
   }
 
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
-  @Get()
-  getAll() {
-    return this.categoryService.getAll();
+  @Get('user/')
+  getbyUser(@Req() req) {
+    return this.categoryService.getByUser(req.user.sub);
   }
 
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  getById(@Param('id') id: number) {
-    return this.categoryService.getById(id);
+  getById(
+        @Req() req, 
+        @Param('id') id: number
+      ) {
+        return this.categoryService.getById(req.user.sub, id);
   }
 
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryService.update(id, updateCategoryDto);
+  async update(  
+        @Req() req, 
+        @Param('id') id: number, 
+        @Body() CreateUpdateCategoryDto: CreateUpdateCategoryDto) {
+    return await this.categoryService.update(req.user.sub, id, CreateUpdateCategoryDto);
   }
 
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  delete(@Param('id') id: number) {
-    return this.categoryService.remove(id);
+  async delete(
+        @Req() req, 
+        @Param('id') id: number, ) {
+    await this.categoryService.delete(req.user.sub, id);
+    return { 
+      success: true,
+      message: `Category ${id} deleted successfully`,
+      deletedId: id
+    };
   }
 }
