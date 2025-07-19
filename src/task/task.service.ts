@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { ITaskRepository } from './repositories/task.repository.interface';
 
 @Injectable()
 export class TaskService {
+
+  constructor(
+        @Inject('ITaskRepository') // 👈 Inyecta la interfaz
+        private readonly taskRepository: ITaskRepository,
+      ) {}
+
   create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+    return this.taskRepository.create()
   }
 
-  findAll() {
-    return `This action returns all task`;
+  getByCategory() {
+    return this.taskRepository.getByCategory()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  getById(id: number) {
+    return this.taskRepository.getById()
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  updateDetails(id: number, updateTaskDto: UpdateTaskDto) {
+    return this.taskRepository.updateDetails()
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  updateState(id: number, updateTaskDto: UpdateTaskDto) {
+    return this.taskRepository.updateState()
+  }
+
+  updateCategory(id: number, updateTaskDto: UpdateTaskDto) {
+    return this.taskRepository.updateCategory()
+  }
+
+  delete(id: number) {
+    return this.taskRepository.delete()
   }
 }

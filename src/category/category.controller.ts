@@ -13,9 +13,9 @@ export class CategoryController {
   @Post()
   create(
         @Req() req, 
-        @Body() createCategoryDto: CreateUpdateCategoryDto,
+        @Body() createUpdateCategoryDto: CreateUpdateCategoryDto,
       ) {
-        return this.categoryService.create(req.user.sub, createCategoryDto);
+        return this.categoryService.create(req.user.sub, createUpdateCategoryDto);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -41,8 +41,8 @@ export class CategoryController {
   async update(  
         @Req() req, 
         @Param('id') id: number, 
-        @Body() CreateUpdateCategoryDto: CreateUpdateCategoryDto) {
-    return await this.categoryService.update(req.user.sub, id, CreateUpdateCategoryDto);
+        @Body() createUpdateCategoryDto: CreateUpdateCategoryDto) {
+    return await this.categoryService.update(req.user.sub, id, createUpdateCategoryDto);
   }
 
   @ApiBearerAuth('JWT-auth')
