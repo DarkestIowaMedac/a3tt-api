@@ -11,13 +11,6 @@ export class CategoryService {
       @Inject('ICategoryRepository') // 👈 Inyecta la interfaz
       private readonly categoryRepository: ICategoryRepository,
     ) {}
-
-  async create(userId: number, createUpdateCategoryDto: CreateUpdateCategoryDto) {
-    return this.categoryRepository.create({
-      name: createUpdateCategoryDto.name,
-      user: { id: userId }
-    });
-  }
      
   getByUser(userId: number) {
     return this.categoryRepository.getByUser(userId)
@@ -25,6 +18,13 @@ export class CategoryService {
 
   getById(userId: number, id: number) {
     return this.checkPermission(userId, id)
+  }
+
+  async create(userId: number, createUpdateCategoryDto: CreateUpdateCategoryDto) {
+    return this.categoryRepository.create({
+      name: createUpdateCategoryDto.name,
+      user: { id: userId }
+    });
   }
 
   async update(userId: number, id: number, CreateUpdateCategoryDto: CreateUpdateCategoryDto) {

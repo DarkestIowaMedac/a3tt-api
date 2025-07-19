@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
+import { CreateTaskDto } from './dto/createUpdate-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ITaskRepository } from './repositories/task.repository.interface';
 
