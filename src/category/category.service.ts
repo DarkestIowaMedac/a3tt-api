@@ -20,7 +20,7 @@ export class CategoryService {
     return this.checkPermission(userId, id)
   }
 
-  async create(userId: number, createUpdateCategoryDto: CreateUpdateCategoryDto) {
+  async create(userId: number, createUpdateCategoryDto: CreateUpdateCategoryDto): Promise<Category> {
     return this.categoryRepository.create({
       name: createUpdateCategoryDto.name,
       user: { id: userId }

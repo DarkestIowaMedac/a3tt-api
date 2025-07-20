@@ -26,8 +26,9 @@ export class Task {
   @JoinColumn({ name: 'USER_ID', referencedColumnName: 'id', foreignKeyConstraintName: 'USERS_FK' })
   user: Users;
 
-  @ManyToOne(() => Category, { onDelete: 'CASCADE', nullable: false })
+  @ManyToOne(() => Category, { onDelete: 'CASCADE', nullable: true })
   @JoinColumn({ name: 'CATEGORY_ID', referencedColumnName: 'id', 
     foreignKeyConstraintName: 'CATEGORY_FK'})
-  category: Category;
+  category: Category | null; 
+  //-1 es un valor especial y no admite la relación, en caso de trabajar con relaciones debe validarse esto.
 }

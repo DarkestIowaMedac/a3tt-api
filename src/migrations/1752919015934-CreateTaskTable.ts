@@ -14,7 +14,7 @@ export class CreateTaskTable1752919015934 implements MigrationInterface {
                 "DESCRIPTION" VARCHAR2(4000 BYTE) DEFAULT 'Inserta Descripcion',
                 "STATE" NUMBER(1,0) DEFAULT 0 NOT NULL ENABLE,
                 "USER_ID" NUMBER(19,0) NOT NULL ENABLE,
-                "CATEGORY_ID" NUMBER(19,0) NOT NULL ENABLE,
+                "CATEGORY_ID" NUMBER(19,0),
                 CONSTRAINT "TASK_PK" PRIMARY KEY ("ID")
                     USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255
                     COMPUTE STATISTICS

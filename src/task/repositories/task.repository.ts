@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task } from '../entities/task.entity';
 import { ITaskRepository } from './task.repository.interface';
+import { CreateTaskDto } from '../dto/create-task.dto';
 
 @Injectable()
 export class TaskRepository implements ITaskRepository {
@@ -12,31 +13,33 @@ constructor(
     private readonly repository: Repository<Task>
   ) {}
 
-    create(createTaskDto: CreateTaskDto) {
-      return 'This action adds a new task';
+  async create(taskData: { name?: string; description?: string, state: number, categoryId: number, user: { id: number }  }): Promise<Task>{
+        const category = this.repository.create(taskData);
+        console.log(category)
+        return this.repository.save(category);
     }
+
+    // getByCategory() {
+    //   return `This action returns all task`;
+    // }
   
-    getByCategory() {
-      return `This action returns all task`;
-    }
+    // getById(id: number) {
+    //   return `This action returns single task`;
+    // }
   
-    getById(id: number) {
-      return `This action returns single task`;
-    }
+    // updateDetails(id: number, updateTaskDto: UpdateTaskDto) {
+    //   return `This action updates a #${id} task`;
+    // }
   
-    updateDetails(id: number, updateTaskDto: UpdateTaskDto) {
-      return `This action updates a #${id} task`;
-    }
+    // updateState(id: number, updateTaskDto: UpdateTaskDto) {
+    //   return `This action updates a #${id} task`;
+    // }
   
-    updateState(id: number, updateTaskDto: UpdateTaskDto) {
-      return `This action updates a #${id} task`;
-    }
+    // updateCategory(id: number, updateTaskDto: UpdateTaskDto) {
+    //   return `This action updates a #${id} task`;
+    // }
   
-    updateCategory(id: number, updateTaskDto: UpdateTaskDto) {
-      return `This action updates a #${id} task`;
-    }
-  
-    delete(id: number) {
-      return `This action removes a #${id} task`;
-    }
+    // delete(id: number) {
+    //   return `This action removes a #${id} task`;
+    // }
 }
