@@ -5,6 +5,7 @@ import { ITaskRepository } from './repositories/task.repository.interface';
 import { CategoryRepository } from '@/category/repositories/category.repository';
 import { Task } from './entities/task.entity';
 import { UpdateTaskDetailsDto } from './dto/update-task-details.dto';
+import { UpdateTaskCategoryDto } from './dto/update-task-category.dto';
 
 @Injectable()
 export class TaskService {
@@ -49,13 +50,21 @@ export class TaskService {
     return this.taskRepository.updateState(id, taskData)
   }
 
-  // updateCategory(id: number, updateTaskDto: UpdateTaskDto) {
-  //   return this.taskRepository.updateCategory()
-  // }
+  async updateCategory(userId: number, id: number, updateTaskCategoryDto: UpdateTaskCategoryDto) {
+    const task = await this.validateTask(userId, id);
+    const newCategory = await this.validateCategory(userId, updateTaskCategoryDto.categoryId)
+    const taskData = {
+      category: updateTaskCategoryDto.categoryId === -1 
+      ? null 
+      : { id: updateTaskCategoryDto.categoryId }
+    };
+    return this.taskRepository.updateCategory(id, taskData)
+  }
 
-  // delete(id: number) {
-  //   return this.taskRepository.delete()
-  // }
+  async delete(userId: number, id: number) {
+    const task = await this.validateTask(userId, id);
+    await this.taskRepository.delete(id);
+  }
 
   private async validateTask(userId: number, id: number): Promise<Task> {
 

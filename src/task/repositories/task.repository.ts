@@ -5,6 +5,7 @@ import { Task } from '../entities/task.entity';
 import { ITaskRepository } from './task.repository.interface';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDetailsDto } from '../dto/update-task-details.dto';
+import { UpdateTaskCategoryDto } from '../dto/update-task-category.dto';
 
 @Injectable()
 export class TaskRepository implements ITaskRepository {
@@ -58,11 +59,16 @@ constructor(
         });
     }
   
-    // updateCategory(id: number, updateTaskDto: UpdateTaskDto) {
-    //   return `This action updates a #${id} task`;
-    // }
+    async updateCategory(id: number, taskData: {category: {id: number}}) {
+        await this.repository.update(id, taskData);
+        return this.repository.findOne({ 
+        where: { id }, 
+        relations: ['user', 'category'],
+        loadEagerRelations: false       
+        });
+    }
   
-    // delete(id: number) {
-    //   return `This action removes a #${id} task`;
-    // }
+    async delete(id: number) {
+      await this.repository.delete({ id });
+    }
 }

@@ -91,7 +91,7 @@ export class CategoryController {
     await this.categoryService.delete(req.user.sub, id);
     return { 
       success: true,
-      message: `Category ${id} deleted successfully`,
+      message: `Category deleted successfully`,
       deletedId: id
     };
   }

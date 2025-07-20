@@ -6,6 +6,7 @@ import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@ne
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { Task } from './entities/task.entity';
 import { UpdateTaskDetailsDto } from './dto/update-task-details.dto';
+import { UpdateTaskCategoryDto } from './dto/update-task-category.dto';
 
 @ApiTags('Tasks')
 @Controller('task')
@@ -71,13 +72,27 @@ export class TaskController {
     return this.taskService.updateState(req.user.sub, id);
   }
 
-  // @Patch('category/:id')
-  // updateCategory(@Param('id') id: number, @Body() updateTaskDto: UpdateTaskDto) {
-  //   return this.taskService.updateCategory(+id, updateTaskDto);
-  // }
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(JwtAuthGuard) 
+  @Patch('category/:id')
+  updateCategory(
+    @Req() req,
+    @Param('id') id: number, 
+    @Body() updateTaskCategoryDto: UpdateTaskCategoryDto) {
+    return this.taskService.updateCategory(req.user.sub, id, updateTaskCategoryDto);
+  }
 
-  // @Delete(':id')
-  // delete(@Param('id') id: number) {
-  //   return this.taskService.delete(id);
-  // }
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(JwtAuthGuard) 
+  @Delete(':id')
+  async delete(
+    @Req() req,
+    @Param('id') id: number) {
+    await this.taskService.delete(req.user.sub, id);
+    return { 
+      success: true,
+      message: `Task deleted successfully`,
+      deletedId: id
+    };
+  }
 }
