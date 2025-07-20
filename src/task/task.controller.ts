@@ -5,6 +5,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { Task } from './entities/task.entity';
+import { UpdateTaskDetailsDto } from './dto/update-task-details.dto';
 
 @ApiTags('Tasks')
 @Controller('task')
@@ -49,15 +50,26 @@ export class TaskController {
     return this.taskService.getById(req.user.sub, id);
   }
 
-  // @Patch('details/:id')
-  // updateDetails(@Param('id') id: number, @Body() updateTaskDto: UpdateTaskDto) {
-  //   return this.taskService.updateDetails(id, updateTaskDto);
-  // }
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(JwtAuthGuard) 
+  @Patch('details/:id')
+  updateDetails(
+        @Req() req,
+        @Param('id') id: number, 
+        @Body() updateTaskDetailsDto: UpdateTaskDetailsDto
+  ) {
+    return this.taskService.updateDetails(req.user.sub, id, updateTaskDetailsDto);
+  }
 
-  // @Patch('state/:id')
-  // updateState(@Param('id') id: number, @Body() updateTaskDto: UpdateTaskDto) {
-  //   return this.taskService.updateState(+id, updateTaskDto);
-  // }
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(JwtAuthGuard) 
+  @Patch('state/:id')
+  updateState(
+    @Req() req,
+    @Param('id') id: number
+  ) {
+    return this.taskService.updateState(req.user.sub, id);
+  }
 
   // @Patch('category/:id')
   // updateCategory(@Param('id') id: number, @Body() updateTaskDto: UpdateTaskDto) {

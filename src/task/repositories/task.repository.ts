@@ -4,6 +4,7 @@ import { IsNull, Repository } from 'typeorm';
 import { Task } from '../entities/task.entity';
 import { ITaskRepository } from './task.repository.interface';
 import { CreateTaskDto } from '../dto/create-task.dto';
+import { UpdateTaskDetailsDto } from '../dto/update-task-details.dto';
 
 @Injectable()
 export class TaskRepository implements ITaskRepository {
@@ -39,13 +40,23 @@ constructor(
         })       
     }
   
-    // updateDetails(id: number, updateTaskDto: UpdateTaskDto) {
-    //   return `This action updates a #${id} task`;
-    // }
-  
-    // updateState(id: number, updateTaskDto: UpdateTaskDto) {
-    //   return `This action updates a #${id} task`;
-    // }
+    async updateDetails(id: number, taskData: UpdateTaskDetailsDto) {
+        await this.repository.update(id, taskData);
+        return this.repository.findOne({ 
+        where: { id }, 
+        relations: ['user', 'category'],
+        loadEagerRelations: false       
+        });
+    }
+    
+    async updateState(id: number, taskData: Task) {
+        await this.repository.update(id, taskData);
+        return this.repository.findOne({ 
+        where: { id }, 
+        relations: ['user', 'category'],
+        loadEagerRelations: false       
+        });
+    }
   
     // updateCategory(id: number, updateTaskDto: UpdateTaskDto) {
     //   return `This action updates a #${id} task`;

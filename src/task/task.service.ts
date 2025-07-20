@@ -4,6 +4,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { ITaskRepository } from './repositories/task.repository.interface';
 import { CategoryRepository } from '@/category/repositories/category.repository';
 import { Task } from './entities/task.entity';
+import { UpdateTaskDetailsDto } from './dto/update-task-details.dto';
 
 @Injectable()
 export class TaskService {
@@ -35,13 +36,18 @@ export class TaskService {
     return this.validateTask(userId, id);
   }
 
-  // updateDetails(id: number, updateTaskDto: UpdateTaskDto) {
-  //   return this.taskRepository.updateDetails()
-  // }
+  updateDetails(userId: number, id: number, updateTaskDto: UpdateTaskDetailsDto) {
+    this.validateTask(userId, id);
+    return this.taskRepository.updateDetails(id, updateTaskDto)
+  }
 
-  // updateState(id: number, updateTaskDto: UpdateTaskDto) {
-  //   return this.taskRepository.updateState()
-  // }
+  async updateState(userId: number, id: number) {
+    const result = await this.validateTask(userId, id);
+    let taskData = new Task()
+   
+    result.state == 0? taskData.state = 1: taskData.state = 0;
+    return this.taskRepository.updateState(id, taskData)
+  }
 
   // updateCategory(id: number, updateTaskDto: UpdateTaskDto) {
   //   return this.taskRepository.updateCategory()
