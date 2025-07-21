@@ -43,15 +43,15 @@ export class CategoryService {
     const category = await this.categoryRepository.getById(categoryId);
     
     if (!category) {
-    throw new NotFoundException('Categoría no encontrada');
+    throw new NotFoundException('Category not found');
     }
     
     if (!category.user) {
-    throw new ForbiddenException('La categoría no tiene un usuario válido');
+    throw new ForbiddenException('Not a valid category for that user');
     }
 
     if (category.user.id !== userId) {
-      throw new ForbiddenException('No tienes permisos');
+      throw new ForbiddenException('You do not have permissions');
     }
 
     return category; 

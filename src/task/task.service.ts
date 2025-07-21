@@ -72,10 +72,10 @@ export class TaskService {
   
   if (!task) {
     throw new ForbiddenException(
-      'La tarea no existe')
+      'Task not found')
   }
   if (task.user.id != userId){
-    throw new ForbiddenException('La tarea no te pertenece')
+    throw new ForbiddenException('You do not own that task')
   }
   return task;
  }
@@ -88,10 +88,10 @@ export class TaskService {
   
   if (!category) {
     throw new ForbiddenException(
-      'La categoría no existe')
+      'Category not found')
   }
   if (category.user.id != userId){
-    throw new ForbiddenException('La categoría no te pertenece')
+    throw new ForbiddenException('You do not own that category')
   }
 }
 }
