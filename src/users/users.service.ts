@@ -68,7 +68,7 @@ export class UsersService {
     }
 
     if (currentUser.email != reqEmail){
-      throw new ForbiddenException('No tienes permiso para eliminar esta cuenta');
+      throw new ForbiddenException('You do not have permission to remove this account');
     }
     
     const isPasswordValid = await bcrypt.compare(
@@ -77,7 +77,7 @@ export class UsersService {
     );
     
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Credenciales inválidas');
+      throw new UnauthorizedException('Invalid Credentials');
     }
 
     return this.usersRepository.delete(currentUser.id);
