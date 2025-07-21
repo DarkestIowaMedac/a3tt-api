@@ -20,7 +20,8 @@ export class CategoryService {
     return this.categoryRepository.getByUser(userId)
   }
 
-  getById(userId: number, id: number) {
+  async getById(userId: number, id: number) {
+    await this.checkUserPermission(userId)
     return this.checkPermission(userId, id)
   }
 
@@ -45,14 +46,14 @@ export class CategoryService {
     await this.checkPermission(userId, id)
     return this.categoryRepository.delete(id)
   }
+
   private async checkUserPermission(userId: number){
     const user = await this.userRepository.getById(userId)
-    console.log("se está llegando")
-    console.log(user)
     if(!user){
       throw new ForbiddenException('Your account has been deleted and you do not have permission')
     }
   }
+
   private async checkPermission(userId: number, categoryId: number): Promise<Category> {
     const category = await this.categoryRepository.getById(categoryId);
     

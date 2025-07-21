@@ -6,6 +6,7 @@ import { CategoryRepository } from '@/category/repositories/category.repository'
 import { Task } from './entities/task.entity';
 import { UpdateTaskDetailsDto } from './dto/update-task-details.dto';
 import { UpdateTaskCategoryDto } from './dto/update-task-category.dto';
+import { IUsersRepository } from '@/users/repositories/users.repository.interface';
 
 @Injectable()
 export class TaskService {
@@ -14,9 +15,12 @@ export class TaskService {
         @Inject('ITaskRepository') // 👈 Inyecta la interfaz
         private readonly taskRepository: ITaskRepository,
         private readonly categoryRepository: CategoryRepository,
+        @Inject('IUsersRepository') 
+        private readonly userRepository: IUsersRepository,
       ) {}
 
   async create(userId: number, createTaskDto: CreateTaskDto) {
+     await this.checkUserPermission(userId)
      await this.validateCategory(userId, createTaskDto.categoryId);
      const taskData = Object.assign({}, createTaskDto, { 
         state: 0, 
@@ -27,22 +31,26 @@ export class TaskService {
   }
 
   async getByCategory(userId: number, category_id: number, state: 0|1) {
+    await this.checkUserPermission(userId)
     if(category_id != -1){
         await this.validateCategory(userId, category_id)
     }
     return this.taskRepository.getByCategory(userId, category_id, state)
   }
 
-  getById(userId: number, id: number) {
+  async getById(userId: number, id: number) {
+    await this.checkUserPermission(userId)
     return this.validateTask(userId, id);
   }
 
-  updateDetails(userId: number, id: number, updateTaskDto: UpdateTaskDetailsDto) {
-    this.validateTask(userId, id);
+  async updateDetails(userId: number, id: number, updateTaskDto: UpdateTaskDetailsDto) {
+    await this.checkUserPermission(userId)
+    await this.validateTask(userId, id);
     return this.taskRepository.updateDetails(id, updateTaskDto)
   }
 
   async updateState(userId: number, id: number) {
+    await this.checkUserPermission(userId)
     const result = await this.validateTask(userId, id);
     let taskData = new Task()
    
@@ -51,6 +59,7 @@ export class TaskService {
   }
 
   async updateCategory(userId: number, id: number, updateTaskCategoryDto: UpdateTaskCategoryDto) {
+    await this.checkUserPermission(userId)
     const task = await this.validateTask(userId, id);
     const newCategory = await this.validateCategory(userId, updateTaskCategoryDto.categoryId)
     const taskData = {
@@ -62,8 +71,16 @@ export class TaskService {
   }
 
   async delete(userId: number, id: number) {
+    await this.checkUserPermission(userId)
     const task = await this.validateTask(userId, id);
     await this.taskRepository.delete(id);
+  }
+
+  private async checkUserPermission(userId: number){
+    const user = await this.userRepository.getById(userId)
+    if(!user){
+      throw new ForbiddenException('Your account has been deleted and you do not have permission')
+    }
   }
 
   private async validateTask(userId: number, id: number): Promise<Task> {

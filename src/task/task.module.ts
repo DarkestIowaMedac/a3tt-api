@@ -7,10 +7,12 @@ import { TaskService } from './task.service';
 import { TaskController } from './task.controller';
 import { TaskRepository } from './repositories/task.repository';
 import { CategoryRepository } from '../category/repositories/category.repository'; 
+import { UsersRepository } from '@/users/repositories/users.repository';
+import { Users } from '@/users/entities/users.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Task, Category]) // 
+    TypeOrmModule.forFeature([Task, Category, Users]) // 
   ],
   controllers: [TaskController],
   providers: [
@@ -19,7 +21,11 @@ import { CategoryRepository } from '../category/repositories/category.repository
       provide: 'ITaskRepository',
       useClass: TaskRepository,
     },
-    CategoryRepository, // Añade esto como proveedor
+    {
+      provide: 'IUsersRepository',
+      useClass: UsersRepository,
+    },
+    CategoryRepository, 
   ],
 })
 export class TaskModule {}
