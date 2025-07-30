@@ -9,10 +9,10 @@ export const databaseProvider = {
         password: process.env.ORACLE_PASSWORD,
         connectString: process.env.ORACLE_CONN_STRING 
       });
-      console.log('Conexión a Oracle establecida');
+      console.log('Oracle conection stablished');
       return connection;
     } catch (err) {
-      console.error('Error al conectar a Oracle:', err);
+      console.error('Error: can not connect to oracledb:', err);
       throw err;
     }
   }

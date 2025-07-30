@@ -46,7 +46,7 @@ export class UsersService {
     const currentUser = await this.usersRepository.getById(id);
     
     if (!currentUser) {
-      throw new ConflictException('Invalid Email, Account does not exist');
+      throw new ForbiddenException('You do not have permission to update this account');
     }
 
   const updates: Partial<Users> = {};
@@ -64,11 +64,13 @@ export class UsersService {
     const currentUser = await this.usersRepository.getByEmail(loginUserDto.email);
     
     if (!currentUser) {
-      throw new ConflictException('Invalid Email, Account does not exist');
+      //throw new ConflictException('Invalid Email, Account does not exist');
+      throw new UnauthorizedException('Invalid Credentials');
     }
 
     if (currentUser.email != reqEmail){
-      throw new ForbiddenException('No tienes permiso para eliminar esta cuenta');
+      //throw new ForbiddenException('You do not have permission to remove this account');
+      throw new UnauthorizedException('Invalid Credentials');
     }
     
     const isPasswordValid = await bcrypt.compare(
@@ -77,7 +79,7 @@ export class UsersService {
     );
     
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Credenciales inválidas');
+      throw new UnauthorizedException('Invalid Credentials');
     }
 
     return this.usersRepository.delete(currentUser.id);

@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config"
 import { DatabaseModule } from "./database/database.module"
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
+import { TaskModule } from './task/task.module';
 
 
 @Module({
@@ -19,6 +20,7 @@ import { CategoryModule } from './category/category.module';
     UsersModule,
     AuthModule,
     CategoryModule,
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [AppService],

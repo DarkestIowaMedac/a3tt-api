@@ -3,31 +3,38 @@ import { CreateUpdateCategoryDto } from './dto/createUpdate-category.dto';
 import { ICategoryRepository } from './repositories/category.repository.interface';
 import { Users } from '@/users/entities/users.entity';
 import { Category } from './entities/category.entity';
+import { IUsersRepository } from '@/users/repositories/users.repository.interface';
 
 
 @Injectable()
 export class CategoryService {
   constructor(
-      @Inject('ICategoryRepository') // 👈 Inyecta la interfaz
+      @Inject('ICategoryRepository') // 👈 Inyecta las interfaces
       private readonly categoryRepository: ICategoryRepository,
+      @Inject('IUsersRepository') 
+      private readonly userRepository: IUsersRepository,
     ) {}
+     
+  async getByUser(userId: number) {
+    await this.checkUserPermission(userId)
+    return this.categoryRepository.getByUser(userId)
+  }
 
-  async create(userId: number, createUpdateCategoryDto: CreateUpdateCategoryDto) {
+  async getById(userId: number, id: number) {
+    await this.checkUserPermission(userId)
+    return this.checkPermission(userId, id)
+  }
+
+  async create(userId: number, createUpdateCategoryDto: CreateUpdateCategoryDto): Promise<Category> {
+    await this.checkUserPermission(userId)
     return this.categoryRepository.create({
       name: createUpdateCategoryDto.name,
       user: { id: userId }
     });
   }
-     
-  getByUser(userId: number) {
-    return this.categoryRepository.getByUser(userId)
-  }
-
-  getById(userId: number, id: number) {
-    return this.checkPermission(userId, id)
-  }
 
   async update(userId: number, id: number, CreateUpdateCategoryDto: CreateUpdateCategoryDto) {
+    await this.checkUserPermission(userId)
     await this.checkPermission(userId, id)
     return this.categoryRepository.update(id, {
       name: CreateUpdateCategoryDto.name
@@ -35,23 +42,31 @@ export class CategoryService {
   }
 
   async delete(userId: number, id: number) {
+    await this.checkUserPermission(userId)
     await this.checkPermission(userId, id)
     return this.categoryRepository.delete(id)
+  }
+
+  private async checkUserPermission(userId: number){
+    const user = await this.userRepository.getById(userId)
+    if(!user){
+      throw new ForbiddenException('Your account has been deleted and you do not have permission')
+    }
   }
 
   private async checkPermission(userId: number, categoryId: number): Promise<Category> {
     const category = await this.categoryRepository.getById(categoryId);
     
     if (!category) {
-    throw new NotFoundException('Categoría no encontrada');
+    throw new NotFoundException('Category not found');
     }
     
     if (!category.user) {
-    throw new ForbiddenException('La categoría no tiene un usuario válido');
+    throw new ForbiddenException('Not a valid category for that user');
     }
 
     if (category.user.id !== userId) {
-      throw new ForbiddenException('No tienes permisos');
+      throw new ForbiddenException('You do not have permissions');
     }
 
     return category; 

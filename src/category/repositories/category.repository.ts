@@ -12,11 +12,6 @@ constructor(
     private readonly repository: Repository<Category>
   ) {}
 
-async create(categoryData: { name: string; user: { id: number }  }): Promise<Category> {
-    const category = this.repository.create(categoryData);
-    return this.repository.save(category);
-  }
-
 async getByUser(user_id: number): Promise<Category[] | null> {
     return this.repository.find({ where: { user: { id: user_id } } });
   }
@@ -26,6 +21,11 @@ async getById(id: number): Promise<Category | null> {
       where: { id }, 
       relations: ['user'],
     });
+  }
+
+async create(categoryData: { name: string; user: { id: number }  }): Promise<Category> {
+    const category = this.repository.create(categoryData);
+    return this.repository.save(category);
   }
 
 async update(id: number, categoryData: { name: string} ): Promise<Category> {

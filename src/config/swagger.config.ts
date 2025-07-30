@@ -1,8 +1,8 @@
 import { DocumentBuilder, SwaggerCustomOptions } from '@nestjs/swagger';
 
 export const swaggerConfig = new DocumentBuilder()
-  .setTitle('API de tu Aplicación')
-  .setDescription('Documentación oficial')
+  .setTitle('API A3TT')
+  .setDescription('Documentation')
   .setVersion('1.0')
   .addBearerAuth(
     {
@@ -10,7 +10,7 @@ export const swaggerConfig = new DocumentBuilder()
       scheme: 'bearer',
       bearerFormat: 'JWT',
       name: 'Authorization',
-      description: 'Ingresa tu token JWT',
+      description: 'Enter your token JWT',
       in: 'header',
     },
     'JWT-auth', // El nombre de seguridad que debe coincidir con @ApiBearerAuth())
