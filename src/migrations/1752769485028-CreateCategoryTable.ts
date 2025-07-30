@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateCategoryTable implements MigrationInterface {
-    name = 'CreateCategoryTable'
+export class CreateCategoryTable1752769485028 implements MigrationInterface {
+    name = 'CreateCategoryTable1752769485028'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
